@@ -7,9 +7,9 @@ import com.lineage.domain.Summoner;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,13 +32,13 @@ public class MainController {
     private TextField win3;
 
     @FXML
-    private ComboBox getRole1;
+    private ComboBox<String> getRole1;
 
     @FXML
-    private ComboBox getRole2;
+    private ComboBox<String> getRole2;
 
     @FXML
-    private ComboBox getRole3;
+    private ComboBox<String> getRole3;
 
     private List<Account> accounts;
 
@@ -60,20 +60,12 @@ public class MainController {
         System.out.println("win2 = " + win2.getText() + " role2 = " + getRole2.getValue());
         System.out.println("win3 = " + win3.getText() + " role3 = " + getRole3.getValue());
 
-        win1.setDisable(true);
-        win2.setDisable(true);
-        win3.setDisable(true);
-
-        getRole1.setDisable(true);
-        getRole2.setDisable(true);
-        getRole3.setDisable(true);
-
-        start.setDisable(true);
+        setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, start);
         stop.setDisable(false);
 
-        if (Objects.nonNull(getRole1.getValue())) createAccount(Role.ofName(getRole1.getValue().toString()), win1.getText());
-        if (Objects.nonNull(getRole2.getValue())) createAccount(Role.ofName(getRole2.getValue().toString()), win2.getText());
-        if (Objects.nonNull(getRole3.getValue())) createAccount(Role.ofName(getRole3.getValue().toString()), win3.getText());
+        if (Objects.nonNull(getRole1.getValue())) createAccount(Role.ofName(getRole1.getValue()), win1.getText());
+        if (Objects.nonNull(getRole2.getValue())) createAccount(Role.ofName(getRole2.getValue()), win2.getText());
+        if (Objects.nonNull(getRole3.getValue())) createAccount(Role.ofName(getRole3.getValue()), win3.getText());
 
         serialPort.openPort();
         sendCommand(49); // 1
@@ -81,15 +73,7 @@ public class MainController {
 
     @FXML
     private void stopTask() {
-        win1.setDisable(false);
-        win2.setDisable(false);
-        win3.setDisable(false);
-
-        getRole1.setDisable(false);
-        getRole2.setDisable(false);
-        getRole3.setDisable(false);
-
-        start.setDisable(false);
+        setDisable(false, win1, win2, win3, getRole1, getRole2, getRole3, start);
         stop.setDisable(true);
         System.out.println("Stop!!" + accounts.size());
 
@@ -100,8 +84,15 @@ public class MainController {
     private void createAccount(Role role, String winNum) {
         Account account;
         switch (role) {
-            case SUMM: account = new Summoner(winNum); accounts.add(account); break;
-            default: System.out.println("Role not supported! Role = "+ role);
+            case SUMM: account = new Summoner(winNum); accounts.add(account);  break;
+            default:
+                System.out.println("Role not supported! Role = " + role);
+        }
+    }
+
+    private void setDisable(boolean b, Control... controls) {
+        for (Control control : controls) {
+            control.setDisable(b);
         }
     }
 
