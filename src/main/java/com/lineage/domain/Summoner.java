@@ -2,8 +2,8 @@ package com.lineage.domain;
 
 public class Summoner implements Account {
 
-    private Role role = Role.SUMM;
-    private String windowNum;
+    private final Role role = Role.SUMM;
+    private final String windowNum;
 
     @Override
     public boolean support(Role role) {
@@ -12,5 +12,13 @@ public class Summoner implements Account {
 
     public Summoner(String windowNum) {
         this.windowNum = windowNum;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getWindowNum() {
+        return windowNum;
     }
 }

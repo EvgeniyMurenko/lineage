@@ -1,5 +1,6 @@
 package com.lineage;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.lineage.domain.Account;
 import com.lineage.domain.Role;
 import com.lineage.domain.Summoner;
@@ -41,11 +42,16 @@ public class MainController {
 
     private List<Account> accounts;
 
-    public void initialize() {
-        accounts = List.of();
-        System.out.println("initialize");
-    }
+    private SerialPort serialPort;
 
+    public void initialize() {
+        accounts = new ArrayList<>();
+        System.out.println("initialize");
+
+        serialPort = SerialPort.getCommPort("COM7");
+        serialPort.setComPortParameters(9600, 8, 1, 0);
+        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
+    }
 
     @FXML
     private void startTask() {
@@ -68,14 +74,9 @@ public class MainController {
         if (Objects.nonNull(getRole1.getValue())) createAccount(Role.ofName(getRole1.getValue().toString()), win1.getText());
         if (Objects.nonNull(getRole2.getValue())) createAccount(Role.ofName(getRole2.getValue().toString()), win2.getText());
         if (Objects.nonNull(getRole3.getValue())) createAccount(Role.ofName(getRole3.getValue().toString()), win3.getText());
-    }
 
-    private void createAccount(Role role, String winNum) {
-        Account account;
-        switch (role) {
-            case SUMM: account = new Summoner(winNum); accounts.add(account); break;
-            default: System.out.println("Role not supported! Role = "+ role);
-        }
+        serialPort.openPort();
+        sendCommand(49); // 1
     }
 
     @FXML
@@ -91,5 +92,25 @@ public class MainController {
         start.setDisable(false);
         stop.setDisable(true);
         System.out.println("Stop!!" + accounts.size());
+
+        sendCommand(48); // 2
+        serialPort.closePort();
+    }
+
+    private void createAccount(Role role, String winNum) {
+        Account account;
+        switch (role) {
+            case SUMM: account = new Summoner(winNum); accounts.add(account); break;
+            default: System.out.println("Role not supported! Role = "+ role);
+        }
+    }
+
+    private void sendCommand(int code) {
+        try {
+            serialPort.getOutputStream().write(code);
+            serialPort.getOutputStream().flush();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
