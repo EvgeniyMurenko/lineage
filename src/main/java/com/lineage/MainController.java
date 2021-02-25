@@ -59,9 +59,9 @@ public class MainController {
     @FXML
     private void startTask() {
         System.out.println("Start!");
-        System.out.println("win1 = " + win1.getText() + " role1 = " + getRole1.getValue());
-        System.out.println("win2 = " + win2.getText() + " role2 = " + getRole2.getValue());
-        System.out.println("win3 = " + win3.getText() + " role3 = " + getRole3.getValue());
+        System.out.println("win = " + win1.getText() + " role = " + getRole1.getValue());
+        System.out.println("win = " + win2.getText() + " role = " + getRole2.getValue());
+        System.out.println("win = " + win3.getText() + " role = " + getRole3.getValue());
 
         setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, start);
         stop.setDisable(false);
@@ -71,7 +71,7 @@ public class MainController {
         if (Objects.nonNull(getRole3.getValue())) createAccount(Role.ofName(getRole3.getValue()), win3.getText());
 
         serialPort.openPort();
-        sendCommand(49); // 1
+//        sendCommand(49); // 1
 
         Utils.delay(2000);
         worker = new Worker(accounts);
@@ -84,9 +84,8 @@ public class MainController {
         stop.setDisable(true);
         System.out.println("Stop!!" + accounts.size());
 
-        sendCommand(48); // 2
+//        sendCommand(48); // 2
         serialPort.closePort();
-
         worker.stop();
     }
 

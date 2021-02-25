@@ -61,7 +61,6 @@ public class Summoner implements Account {
         }
     }
 
-
     private void sendNextTarget() {
         System.out.println("Next target");
         sendCommand(0);
