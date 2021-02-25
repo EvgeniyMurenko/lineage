@@ -2,5 +2,9 @@ package com.lineage.domain;
 
 public interface Account {
 
-    boolean support(Role role);
+    Account process(Account activeWindow);
+
+    void switchWindow();
+
+    void sendCommand(int code);
 }

@@ -1,14 +1,13 @@
 package com.lineage;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.lineage.domain.Account;
-import com.lineage.domain.Role;
-import com.lineage.domain.Summoner;
+import com.lineage.domain.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
+import javafx.scene.robot.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +43,14 @@ public class MainController {
 
     private SerialPort serialPort;
 
-    public void initialize() {
-        accounts = new ArrayList<>();
-        System.out.println("initialize");
+    private Robot robot;
 
+    private Worker worker;
+
+    public void initialize() {
+        System.out.println("initialize");
+        accounts = new ArrayList<>();
+        robot = new Robot();
         serialPort = SerialPort.getCommPort("COM7");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
@@ -69,6 +72,10 @@ public class MainController {
 
         serialPort.openPort();
         sendCommand(49); // 1
+
+        Utils.delay(2000);
+        worker = new Worker(accounts);
+        worker.run();
     }
 
     @FXML
@@ -79,12 +86,16 @@ public class MainController {
 
         sendCommand(48); // 2
         serialPort.closePort();
+
+        worker.stop();
     }
 
     private void createAccount(Role role, String winNum) {
         Account account;
         switch (role) {
-            case SUMM: account = new Summoner(winNum); accounts.add(account);  break;
+            case SUMM: account = new Summoner(winNum, robot, serialPort); accounts.add(account);  break;
+            case BD: account = new Bladedancer(winNum, robot, serialPort); accounts.add(account);  break;
+            case PP: account = new Prophet(winNum, robot, serialPort); accounts.add(account);  break;
             default:
                 System.out.println("Role not supported! Role = " + role);
         }
@@ -104,4 +115,5 @@ public class MainController {
             System.out.println(e.getMessage());
         }
     }
+
 }
