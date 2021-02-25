@@ -70,4 +70,8 @@ public class Summoner implements Account {
             inFight = true;
         }
     }
+
+    public KeyCode getWinKeyCode() {
+        return winKeyCode;
+    }
 }

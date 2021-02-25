@@ -58,4 +58,8 @@ public class Bladedancer implements Account {
     private int getRandomSeconds() {
         return 1 + (int)  (Math.random() * MAX_DELAY_SEC);
     }
+
+    public KeyCode getWinKeyCode() {
+        return winKeyCode;
+    }
 }

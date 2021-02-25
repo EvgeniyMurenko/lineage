@@ -59,16 +59,14 @@ public class MainController {
     @FXML
     private void startTask() {
         System.out.println("Start!");
-        System.out.println("win = " + win1.getText() + " role = " + getRole1.getValue());
-        System.out.println("win = " + win2.getText() + " role = " + getRole2.getValue());
-        System.out.println("win = " + win3.getText() + " role = " + getRole3.getValue());
-
         setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, start);
         stop.setDisable(false);
 
         if (Objects.nonNull(getRole1.getValue())) createAccount(Role.ofName(getRole1.getValue()), win1.getText());
         if (Objects.nonNull(getRole2.getValue())) createAccount(Role.ofName(getRole2.getValue()), win2.getText());
         if (Objects.nonNull(getRole3.getValue())) createAccount(Role.ofName(getRole3.getValue()), win3.getText());
+
+        accounts.forEach(it -> System.out.println("win = " + it.getWinKeyCode() + " role = " + it.getClass().getSimpleName()));
 
         serialPort.openPort();
 //        sendCommand(49); // 1
