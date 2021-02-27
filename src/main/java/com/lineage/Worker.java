@@ -15,12 +15,12 @@ public class Worker extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Worker is running!");
         while (true) {
             for (Account account : accounts) {
                 activeWindow = account.process(activeWindow);
-                Utils.delay(500);
             }
-            Utils.delay(5000);
+            Utils.delay(500);
         }
     }
 }

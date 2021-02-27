@@ -51,7 +51,7 @@ public class MainController {
         System.out.println("initialize");
         accounts = new ArrayList<>();
         robot = new Robot();
-        serialPort = SerialPort.getCommPort("COM7");
+        serialPort = SerialPort.getCommPort("COM9");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
     }
@@ -69,9 +69,8 @@ public class MainController {
         accounts.forEach(it -> System.out.println("win = " + it.getWinKeyCode() + " role = " + it.getClass().getSimpleName()));
 
         serialPort.openPort();
-//        sendCommand(49); // 1
 
-        Utils.delay(2000);
+        Utils.delay(500);
         worker = new Worker(accounts);
         worker.run();
     }
@@ -93,8 +92,7 @@ public class MainController {
             case SUMM: account = new Summoner(winNum, robot, serialPort); accounts.add(account);  break;
             case BD: account = new Bladedancer(winNum, robot, serialPort); accounts.add(account);  break;
             case PP: account = new Prophet(winNum, robot, serialPort); accounts.add(account);  break;
-            default:
-                System.out.println("Role not supported! Role = " + role);
+            default: System.out.println("Role not supported! Role = " + role);
         }
     }
 
@@ -103,14 +101,4 @@ public class MainController {
             control.setDisable(b);
         }
     }
-
-    private void sendCommand(int code) {
-        try {
-            serialPort.getOutputStream().write(code);
-            serialPort.getOutputStream().flush();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
 }

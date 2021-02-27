@@ -8,7 +8,5 @@ public interface Account {
 
     void switchWindow();
 
-    void sendCommand(int code);
-
     KeyCode getWinKeyCode();
 }

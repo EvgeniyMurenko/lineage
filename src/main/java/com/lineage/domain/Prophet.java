@@ -1,6 +1,7 @@
 package com.lineage.domain;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.lineage.Utils;
 import javafx.scene.input.KeyCode;
 import javafx.scene.robot.Robot;
 
@@ -30,7 +31,7 @@ public class Prophet implements Account {
                 switchWindow();
                 activeWindow = this;
             }
-            sendCommand(0); // need send some code of button
+            Utils.sendCommand(serialPort, 0); // need send some code of button
             lastBuff = LocalTime.now().plusSeconds(getRandomSeconds());
             System.out.println("Send command to press buff! time = " + lastBuff);
         }
@@ -43,16 +44,6 @@ public class Prophet implements Account {
         robot.keyPress(winKeyCode);
         robot.keyRelease(winKeyCode);
         robot.keyRelease(KeyCode.WINDOWS);
-    }
-
-    @Override
-    public void sendCommand(int code) {
-        try {
-            serialPort.getOutputStream().write(code);
-            serialPort.getOutputStream().flush();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     private int getRandomSeconds() {

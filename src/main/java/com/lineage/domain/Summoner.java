@@ -12,10 +12,10 @@ public class Summoner implements Account {
     private final Robot robot;
     private final SerialPort serialPort;
 
-    private static final Color COLOR_HEAL_POINT_MIDDLE = Color.valueOf("0x3c3f41ff");
-    private static final int MIN_X =  789;
-    private static final int MAX_X =  1200;
-    private static final int POS_Y =  50;
+    private static final Color COLOR_HEALS_POINT = Color.rgb(111, 23, 19);
+//    private static final Color COLOR_HEALS_POINT = Color.rgb(127, 70, 68);
+    private static final int POS_X =  791;
+    private static final int POS_Y =  51;
     private boolean inFight = false;
 
     public Summoner(String windowNum, Robot robot, SerialPort serialPort) {
@@ -32,10 +32,9 @@ public class Summoner implements Account {
         }
 
         if (inFight) {
-            if (COLOR_HEAL_POINT_MIDDLE.equals(robot.getPixelColor(MIN_X, POS_Y))) {
+            if (!COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
                 Utils.delay(500);
                 inFight = false;
-                sendNextTarget();
             }
         } else {
             sendNextTarget();
@@ -51,22 +50,13 @@ public class Summoner implements Account {
         robot.keyRelease(KeyCode.WINDOWS);
     }
 
-    @Override
-    public void sendCommand(int code) {
-        try {
-            serialPort.getOutputStream().write(code);
-            serialPort.getOutputStream().flush();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     private void sendNextTarget() {
         System.out.println("Next target");
-        sendCommand(0);
-        if (COLOR_HEAL_POINT_MIDDLE.equals(robot.getPixelColor(MAX_X, POS_Y))) {
+        Utils.sendCommand(serialPort, 49);
+        Utils.delay(500);
+        if (COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
             System.out.println("Attack!");
-            sendCommand(0);
+            Utils.sendCommand(serialPort, 50);
             inFight = true;
         }
     }
