@@ -6,6 +6,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 
+import java.time.LocalTime;
+
 public class Summoner implements Account {
 
     private final KeyCode winKeyCode;
@@ -17,6 +19,11 @@ public class Summoner implements Account {
     private static final int POS_Y =  51;
     private boolean inFight = false;
 
+    private static final int MAX_DELAY_SEC = 60;
+
+    private LocalTime buffTime = LocalTime.of(0, 18, 30);
+    private LocalTime lastBuff;
+
     public Summoner(String windowNum, Robot robot, SerialPort serialPort) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
@@ -25,10 +32,15 @@ public class Summoner implements Account {
 
     @Override
     public Account process(Account activeWindow) {
-        if (activeWindow == null || !activeWindow.equals(this)) {
-            switchWindow();
-            activeWindow = this;
-        }
+
+//        if (lastBuff == null || LocalTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
+//            activeWindow = checkAndSetActiveWindow(activeWindow);
+//            Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
+//            lastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
+//            System.out.println("Send command to press dance! time = " + lastBuff);
+//        }
+
+        activeWindow = checkAndSetActiveWindow(activeWindow);
 
         if (inFight) {
             if (!COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
@@ -42,29 +54,30 @@ public class Summoner implements Account {
         return activeWindow;
     }
 
-    @Override
-    public void switchWindow() {
-        robot.keyPress(KeyCode.WINDOWS);
-        robot.keyPress(winKeyCode);
-        robot.keyRelease(winKeyCode);
-        robot.keyRelease(KeyCode.WINDOWS);
+    private Account checkAndSetActiveWindow(Account activeWindow) {
+        if (activeWindow == null || !activeWindow.equals(this)) {
+            Utils.switchWindow(robot, winKeyCode);
+            activeWindow = this;
+        }
+        return activeWindow;
     }
 
     private void sendNextTarget() {
         System.out.println("Next target");
-        Utils.sendCommand(serialPort, 49);
+        Utils.sendCommand(serialPort, Key.KEY_ESC);
+        Utils.sendCommand(serialPort, Key.KEY_F1);
         Utils.delay(500);
         if (COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
             System.out.println("Attack!");
-            Utils.sendCommand(serialPort, 49);
-            Utils.sendCommand(serialPort, 50);
+            Utils.sendCommand(serialPort, Key.KEY_F1);
+            Utils.sendCommand(serialPort, Key.KEY_F2);
             inFight = true;
         }
     }
 
     private void pickUpLoot() {
-        for (int i = 0; i < 10; i++) {
-            Utils.sendCommand(serialPort, 51); // pickUp
+        for (int i = 0; i < 5; i++) {
+            Utils.sendCommand(serialPort, Key.KEY_F3); // pickUp
             Utils.delay(100);
         }
     }

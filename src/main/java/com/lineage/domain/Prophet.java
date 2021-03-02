@@ -28,26 +28,14 @@ public class Prophet implements Account {
     public Account process(Account activeWindow) {
         if (lastBuff == null || LocalTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
             if (activeWindow == null || !activeWindow.equals(this)) {
-                switchWindow();
+                Utils.switchWindow(robot, winKeyCode);
                 activeWindow = this;
             }
-            Utils.sendCommand(serialPort, 50); // need send some code of button
-            lastBuff = LocalTime.now().plusSeconds(getRandomSeconds());
+            Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
+            lastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
             System.out.println("Send command to press buff! time = " + lastBuff);
         }
         return activeWindow;
-    }
-
-    @Override
-    public void switchWindow() {
-        robot.keyPress(KeyCode.WINDOWS);
-        robot.keyPress(winKeyCode);
-        robot.keyRelease(winKeyCode);
-        robot.keyRelease(KeyCode.WINDOWS);
-    }
-
-    private int getRandomSeconds() {
-        return 1 + (int) (Math.random() * MAX_DELAY_SEC);
     }
 
     public KeyCode getWinKeyCode() {

@@ -1,6 +1,9 @@
 package com.lineage;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.lineage.domain.Key;
+import javafx.scene.input.KeyCode;
+import javafx.scene.robot.Robot;
 
 public class Utils {
 
@@ -12,13 +15,26 @@ public class Utils {
         }
     }
 
-    public static void sendCommand(SerialPort serialPort, int code) {
+    public static void sendCommand(SerialPort serialPort, Key key) {
         try {
-            serialPort.getOutputStream().write(code);
+            serialPort.getOutputStream().write(key.getKeyCode());
             serialPort.getOutputStream().flush();
-            Utils.delay(500);
+            delay(500);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void switchWindow(Robot robot, KeyCode winKeyCode) {
+        delay(500);
+        robot.keyPress(KeyCode.WINDOWS);
+        robot.keyPress(winKeyCode);
+        robot.keyRelease(winKeyCode);
+        robot.keyRelease(KeyCode.WINDOWS);
+        delay(500);
+    }
+
+    public static int getRandomSeconds(Integer maxDelay) {
+        return 1 + (int)  (Math.random() * maxDelay);
     }
 }
