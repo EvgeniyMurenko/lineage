@@ -6,18 +6,18 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 
-public class Summoner implements Account {
+public class ShillienKnight implements Account {
 
     private final KeyCode winKeyCode;
     private final Robot robot;
     private final SerialPort serialPort;
 
     private static final Color COLOR_HEALS_POINT = Color.rgb(111, 23, 19);
-    private static final int POS_X =  791;
-    private static final int POS_Y =  51;
+    private static final int POS_X = 791;
+    private static final int POS_Y = 51;
     private boolean inFight = false;
 
-    public Summoner(String windowNum, Robot robot, SerialPort serialPort) {
+    public ShillienKnight(String windowNum, Robot robot, SerialPort serialPort) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
         this.serialPort = serialPort;
@@ -37,9 +37,16 @@ public class Summoner implements Account {
                 pickUpLoot();
             }
         } else {
-            sendNextTarget();
+            assistSummoner();
         }
         return activeWindow;
+    }
+
+    private void pickUpLoot() {
+        for (int i = 0; i < 10; i++) {
+            Utils.sendCommand(serialPort, 50); // pickUp
+            Utils.delay(100);
+        }
     }
 
     @Override
@@ -50,22 +57,12 @@ public class Summoner implements Account {
         robot.keyRelease(KeyCode.WINDOWS);
     }
 
-    private void sendNextTarget() {
-        System.out.println("Next target");
+    private void assistSummoner() {
         Utils.sendCommand(serialPort, 49);
+        inFight = true;
         Utils.delay(500);
         if (COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
-            System.out.println("Attack!");
-            Utils.sendCommand(serialPort, 49);
-            Utils.sendCommand(serialPort, 50);
             inFight = true;
-        }
-    }
-
-    private void pickUpLoot() {
-        for (int i = 0; i < 10; i++) {
-            Utils.sendCommand(serialPort, 51); // pickUp
-            Utils.delay(100);
         }
     }
 

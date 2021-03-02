@@ -14,9 +14,9 @@ public class Utils {
 
     public static void sendCommand(SerialPort serialPort, int code) {
         try {
-            Utils.delay(500);
             serialPort.getOutputStream().write(code);
             serialPort.getOutputStream().flush();
+            Utils.delay(500);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

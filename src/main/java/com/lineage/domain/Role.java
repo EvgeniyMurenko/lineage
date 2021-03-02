@@ -1,7 +1,7 @@
 package com.lineage.domain;
 
 public enum Role {
-    NONE, SUMM, BD, PP;
+    NONE, SUMM, BD, PP, SHK;
 
     public static Role ofName(String name) {
         if (name == null) {

@@ -31,7 +31,7 @@ public class Prophet implements Account {
                 switchWindow();
                 activeWindow = this;
             }
-            Utils.sendCommand(serialPort, 0); // need send some code of button
+            Utils.sendCommand(serialPort, 50); // need send some code of button
             lastBuff = LocalTime.now().plusSeconds(getRandomSeconds());
             System.out.println("Send command to press buff! time = " + lastBuff);
         }

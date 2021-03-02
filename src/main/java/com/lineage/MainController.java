@@ -2,6 +2,7 @@ package com.lineage;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.lineage.domain.*;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -10,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.robot.Robot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,13 +33,13 @@ public class MainController {
     private TextField win3;
 
     @FXML
-    private ComboBox<String> getRole1;
+    private ComboBox<Role> getRole1;
 
     @FXML
-    private ComboBox<String> getRole2;
+    private ComboBox<Role> getRole2;
 
     @FXML
-    private ComboBox<String> getRole3;
+    private ComboBox<Role> getRole3;
 
     private List<Account> accounts;
 
@@ -54,6 +56,13 @@ public class MainController {
         serialPort = SerialPort.getCommPort("COM9");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
+
+        getRole1.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
+        getRole1.getSelectionModel().selectFirst();
+        getRole2.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
+        getRole2.getSelectionModel().selectFirst();
+        getRole3.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
+        getRole3.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -62,9 +71,9 @@ public class MainController {
         setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, start);
         stop.setDisable(false);
 
-        if (Objects.nonNull(getRole1.getValue())) createAccount(Role.ofName(getRole1.getValue()), win1.getText());
-        if (Objects.nonNull(getRole2.getValue())) createAccount(Role.ofName(getRole2.getValue()), win2.getText());
-        if (Objects.nonNull(getRole3.getValue())) createAccount(Role.ofName(getRole3.getValue()), win3.getText());
+        if (Objects.nonNull(getRole1.getValue())) createAccount(getRole1.getValue(), win1.getText());
+        if (Objects.nonNull(getRole2.getValue())) createAccount(getRole2.getValue(), win2.getText());
+        if (Objects.nonNull(getRole3.getValue())) createAccount(getRole3.getValue(), win3.getText());
 
         accounts.forEach(it -> System.out.println("win = " + it.getWinKeyCode() + " role = " + it.getClass().getSimpleName()));
 
@@ -92,6 +101,7 @@ public class MainController {
             case SUMM: account = new Summoner(winNum, robot, serialPort); accounts.add(account);  break;
             case BD: account = new Bladedancer(winNum, robot, serialPort); accounts.add(account);  break;
             case PP: account = new Prophet(winNum, robot, serialPort); accounts.add(account);  break;
+            case SHK: account = new ShillienKnight(winNum, robot, serialPort); accounts.add(account);  break;
             default: System.out.println("Role not supported! Role = " + role);
         }
     }

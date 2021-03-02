@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane id="AnchorPane" prefHeight="281.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lineage.MainController">
    <children>
       <Pane prefHeight="281.0" prefWidth="320.0">
@@ -19,49 +16,13 @@
                   </Pane>
                   <Pane prefHeight="226.0" prefWidth="320.0">
                      <children>
-                        <ComboBox fx:id="getRole1" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="133.0">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="NONE" />
-                                    <String fx:value="SUMM" />
-                                    <String fx:value="BD" />
-                                    <String fx:value="PP" />
-                                </FXCollections>
-                            </items>
-                            <value>
-                                <String fx:value="NONE" />
-                            </value>
-                        </ComboBox>
+                        <ComboBox fx:id="getRole1" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="133.0"/>
                         <TextField fx:id="win1" layoutX="160.0" layoutY="14.0" prefHeight="25.0" prefWidth="142.0"/>
 
-                         <ComboBox fx:id="getRole2" layoutX="14.0" layoutY="46.0" prefHeight="25.0" prefWidth="133.0">
-                             <items>
-                                 <FXCollections fx:factory="observableArrayList">
-                                     <String fx:value="NONE" />
-                                     <String fx:value="SUMM" />
-                                     <String fx:value="BD" />
-                                     <String fx:value="PP" />
-                                 </FXCollections>
-                             </items>
-                             <value>
-                                 <String fx:value="NONE" />
-                             </value>
-                         </ComboBox>
+                         <ComboBox fx:id="getRole2" layoutX="14.0" layoutY="46.0" prefHeight="25.0" prefWidth="133.0"/>
                          <TextField fx:id="win2" layoutX="160.0" layoutY="46.0" prefHeight="25.0" prefWidth="142.0" />
 
-                         <ComboBox fx:id="getRole3" layoutX="14.0" layoutY="80.0" prefHeight="25.0" prefWidth="133.0">
-                             <items>
-                                 <FXCollections fx:factory="observableArrayList">
-                                     <String fx:value="NONE" />
-                                     <String fx:value="SUMM" />
-                                     <String fx:value="BD" />
-                                     <String fx:value="PP" />
-                                 </FXCollections>
-                             </items>
-                             <value>
-                                 <String fx:value="NONE" />
-                             </value>
-                         </ComboBox>
+                         <ComboBox fx:id="getRole3" layoutX="14.0" layoutY="80.0" prefHeight="25.0" prefWidth="133.0"/>
                          <TextField fx:id="win3" layoutX="160.0" layoutY="80.0" prefHeight="25.0" prefWidth="142.0" />
 
                      </children></Pane>
