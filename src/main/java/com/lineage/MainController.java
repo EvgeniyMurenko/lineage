@@ -72,7 +72,7 @@ public class MainController {
 
     private List<Profile> createProfiles() {
         Profile pcProfile = new Profile("pc", 790, 51, Color.rgb(111, 23, 20));
-        Profile laptopProfile = new Profile("laptop", 791, 51, Color.rgb(111, 23, 19));
+        Profile laptopProfile = new Profile("laptop", 716, 46, Color.rgb(135, 29, 24));
         return List.of(pcProfile, laptopProfile);
     }
 
