@@ -15,10 +15,10 @@ public class Prophet implements Account {
 
     private static final int MAX_DELAY_SEC = 60;
 
-    private LocalTime buffTime = LocalTime.of(0, 18, 30);
+    private final LocalTime buffTime = LocalTime.of(0, 18, 30);
     private LocalTime lastBuff;
 
-    public Prophet(String windowNum, Robot robot, SerialPort serialPort) {
+    public Prophet(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
         this.serialPort = serialPort;

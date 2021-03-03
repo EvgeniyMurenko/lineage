@@ -13,21 +13,24 @@ public class Summoner implements Account {
     private final KeyCode winKeyCode;
     private final Robot robot;
     private final SerialPort serialPort;
+    private final Color COLOR_HEALS_POINT;
+    private final int POS_X;
+    private final int POS_Y;
 
-    private static final Color COLOR_HEALS_POINT = Color.rgb(111, 23, 19);
-    private static final int POS_X =  791;
-    private static final int POS_Y =  51;
     private boolean inFight = false;
 
     private static final int MAX_DELAY_SEC = 60;
 
-    private LocalTime buffTime = LocalTime.of(0, 18, 30);
+    private final LocalTime buffTime = LocalTime.of(0, 18, 30);
     private LocalTime lastBuff;
 
-    public Summoner(String windowNum, Robot robot, SerialPort serialPort) {
+    public Summoner(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
         this.serialPort = serialPort;
+        this.COLOR_HEALS_POINT = profile.getColor();
+        this.POS_X = profile.getxCord();
+        this.POS_Y = profile.getyCord();
     }
 
     @Override

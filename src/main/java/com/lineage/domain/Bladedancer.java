@@ -3,6 +3,7 @@ package com.lineage.domain;
 import com.fazecast.jSerialComm.SerialPort;
 import com.lineage.Utils;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 
 import java.time.LocalTime;
@@ -12,13 +13,12 @@ public class Bladedancer implements Account {
     private final KeyCode winKeyCode;
     private final Robot robot;
     private final SerialPort serialPort;
-
     private static final int MAX_DELAY_SEC = 20;
 
     private LocalTime buffTime = LocalTime.of(0, 1, 35);
     private LocalTime lastBuff;
 
-    public Bladedancer(String windowNum, Robot robot, SerialPort serialPort) {
+    public Bladedancer(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
         this.serialPort = serialPort;

@@ -7,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 
 import java.util.ArrayList;
@@ -18,10 +20,10 @@ import java.util.Objects;
 public class MainController {
 
     @FXML
-    private Button start;
+    private Button startBtn;
 
     @FXML
-    private Button stop;
+    private Button stopBtn;
 
     @FXML
     private TextField win1;
@@ -40,6 +42,9 @@ public class MainController {
 
     @FXML
     private ComboBox<Role> getRole3;
+
+    @FXML
+    private ListView<Profile> profilesListView;
 
     private List<Account> accounts;
 
@@ -63,17 +68,29 @@ public class MainController {
         getRole2.getSelectionModel().selectFirst();
         getRole3.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
         getRole3.getSelectionModel().selectFirst();
+
+        List<Profile> profilesList = createProfiles();
+        profilesListView.setItems(FXCollections.observableArrayList(profilesList));
+        profilesListView.getSelectionModel().selectFirst();
+    }
+
+    private List<Profile> createProfiles() {
+        Profile pcProfile = new Profile("pc", 791, 51, Color.rgb(111, 23, 19));
+        Profile laptopProfile = new Profile("laptop", 791, 51, Color.rgb(111, 23, 19));
+        return List.of(pcProfile, laptopProfile);
     }
 
     @FXML
     private void startTask() {
         System.out.println("Start!");
-        setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, start);
-        stop.setDisable(false);
+        setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, startBtn);
+        stopBtn.setDisable(false);
 
-        if (Objects.nonNull(getRole1.getValue())) createAccount(getRole1.getValue(), win1.getText());
-        if (Objects.nonNull(getRole2.getValue())) createAccount(getRole2.getValue(), win2.getText());
-        if (Objects.nonNull(getRole3.getValue())) createAccount(getRole3.getValue(), win3.getText());
+        Profile profile = profilesListView.getSelectionModel().getSelectedItem();
+
+        if (Objects.nonNull(getRole1.getValue())) createAccount(getRole1.getValue(), win1.getText(), profile);
+        if (Objects.nonNull(getRole2.getValue())) createAccount(getRole2.getValue(), win2.getText(), profile);
+        if (Objects.nonNull(getRole3.getValue())) createAccount(getRole3.getValue(), win3.getText(), profile);
 
         accounts.forEach(it -> System.out.println("win = " + it.getWinKeyCode() + " role = " + it.getClass().getSimpleName()));
 
@@ -86,8 +103,8 @@ public class MainController {
 
     @FXML
     private void stopTask() {
-        setDisable(false, win1, win2, win3, getRole1, getRole2, getRole3, start);
-        stop.setDisable(true);
+        setDisable(false, win1, win2, win3, getRole1, getRole2, getRole3, startBtn);
+        stopBtn.setDisable(true);
         System.out.println("Stop!!" + accounts.size());
 
 //        sendCommand(48); // 2
@@ -95,13 +112,13 @@ public class MainController {
         worker.stop();
     }
 
-    private void createAccount(Role role, String winNum) {
+    private void createAccount(Role role, String winNum, Profile profile) {
         Account account;
         switch (role) {
-            case SUMM: account = new Summoner(winNum, robot, serialPort); accounts.add(account);  break;
-            case BD: account = new Bladedancer(winNum, robot, serialPort); accounts.add(account);  break;
-            case PP: account = new Prophet(winNum, robot, serialPort); accounts.add(account);  break;
-            case SHK: account = new ShillienKnight(winNum, robot, serialPort); accounts.add(account);  break;
+            case SUMM: account = new Summoner(winNum, robot, serialPort, profile); accounts.add(account);  break;
+            case BD: account = new Bladedancer(winNum, robot, serialPort, profile); accounts.add(account);  break;
+            case PP: account = new Prophet(winNum, robot, serialPort, profile); accounts.add(account);  break;
+            case SHK: account = new ShillienKnight(winNum, robot, serialPort, profile); accounts.add(account);  break;
             default: System.out.println("Role not supported! Role = " + role);
         }
     }
