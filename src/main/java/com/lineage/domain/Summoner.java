@@ -36,14 +36,12 @@ public class Summoner implements Account {
     @Override
     public Account process(Account activeWindow) {
 
-//        if (lastBuff == null || LocalTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
-//            activeWindow = checkAndSetActiveWindow(activeWindow);
-//            Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
-//            lastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
-//            System.out.println("Send command to press dance! time = " + lastBuff);
-//        }
-
         activeWindow = checkAndSetActiveWindow(activeWindow);
+        if (lastBuff == null || LocalTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
+            Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
+            lastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
+            System.out.println("Send command to press summon buff! time = " + lastBuff);
+        }
 
         if (inFight) {
             if (!COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
@@ -67,7 +65,7 @@ public class Summoner implements Account {
 
     private void sendNextTarget() {
         System.out.println("Next target");
-        Utils.sendCommand(serialPort, Key.KEY_ESC);
+//        Utils.sendCommand(serialPort, Key.KEY_ESC);
         Utils.sendCommand(serialPort, Key.KEY_F1);
         Utils.delay(500);
         if (COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
