@@ -40,17 +40,19 @@ public class Summoner implements Account {
     public Account process(Account activeWindow) {
 
         activeWindow = checkAndSetActiveWindow(activeWindow);
+
+        if (professiLastBuff == null || LocalTime.now().isAfter(professiLastBuff.plusMinutes(professiBuffTime.getMinute()).plusSeconds(professiBuffTime.getSecond()))) {
+            Utils.sendCommand(serialPort, Key.KEY_F4); // need send some code of button
+            professiLastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
+            Utils.delay(2000);
+            System.out.println("Send command to press summon professi Buff! time = " + professiLastBuff);
+        }
+
         if (lastBuff == null || LocalTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
             Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
             lastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
-            Utils.delay(1000);
+            Utils.delay(5500);
             System.out.println("Send command to press summon buff! time = " + lastBuff);
-        }
-
-        if (professiLastBuff == null || LocalTime.now().isAfter(professiLastBuff.plusMinutes(professiBuffTime.getMinute()).plusSeconds(professiBuffTime.getSecond()))) {
-            Utils.sendCommand(serialPort, Key.KEY_F6); // need send some code of button
-            professiLastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
-            System.out.println("Send command to press summon professi Buff! time = " + professiLastBuff);
         }
 
         if (inFight) {
@@ -77,7 +79,7 @@ public class Summoner implements Account {
 
     private void sendNextTarget() {
         System.out.println("Next target");
-//        Utils.sendCommand(serialPort, Key.KEY_ESC);
+        Utils.sendCommand(serialPort, Key.KEY_ESC);
         Utils.sendCommand(serialPort, Key.KEY_F1);
         Utils.delay(500);
         if (COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
@@ -89,7 +91,7 @@ public class Summoner implements Account {
     }
 
     private void pickUpLoot() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             Utils.sendCommand(serialPort, Key.KEY_F3); // pickUp
             Utils.delay(100);
         }
