@@ -24,6 +24,9 @@ public class Summoner implements Account {
     private final LocalTime buffTime = LocalTime.of(0, 18, 30);
     private LocalTime lastBuff;
 
+    private final LocalTime professiBuffTime = LocalTime.of(0, 4, 0);
+    private LocalTime professiLastBuff;
+
     public Summoner(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
@@ -40,7 +43,14 @@ public class Summoner implements Account {
         if (lastBuff == null || LocalTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
             Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
             lastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
+            Utils.delay(1000);
             System.out.println("Send command to press summon buff! time = " + lastBuff);
+        }
+
+        if (professiLastBuff == null || LocalTime.now().isAfter(professiLastBuff.plusMinutes(professiBuffTime.getMinute()).plusSeconds(professiBuffTime.getSecond()))) {
+            Utils.sendCommand(serialPort, Key.KEY_F6); // need send some code of button
+            professiLastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
+            System.out.println("Send command to press summon professi Buff! time = " + professiLastBuff);
         }
 
         if (inFight) {
@@ -48,6 +58,8 @@ public class Summoner implements Account {
                 Utils.delay(500);
                 inFight = false;
                 pickUpLoot();
+            } else {
+                Utils.sendCommand(serialPort, Key.KEY_F2);
             }
         } else {
             sendNextTarget();
@@ -77,7 +89,7 @@ public class Summoner implements Account {
     }
 
     private void pickUpLoot() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             Utils.sendCommand(serialPort, Key.KEY_F3); // pickUp
             Utils.delay(100);
         }
