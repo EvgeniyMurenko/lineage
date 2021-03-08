@@ -7,7 +7,10 @@ public enum Key {
     KEY_F3(196),
     KEY_F4(197),
     KEY_F5(198),
-    KEY_F6(199);
+    KEY_F6(199),
+    KEY_F7(200),
+    KEY_F8(201),
+    KEY_F9(202);
 
     private final Integer keyCode;
 

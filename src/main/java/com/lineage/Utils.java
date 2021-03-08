@@ -19,7 +19,7 @@ public class Utils {
         try {
             serialPort.getOutputStream().write(key.getKeyCode());
             serialPort.getOutputStream().flush();
-            delay(500);
+            delay(300);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

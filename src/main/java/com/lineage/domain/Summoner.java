@@ -17,6 +17,10 @@ public class Summoner implements Account {
     private final int POS_X;
     private final int POS_Y;
 
+    private final Color COLOR_HEALS_POINT_PET = Color.rgb(135, 29, 24);
+    private final int POS_PET_X = 602;
+    private final int POS_PET_Y = 869;
+
     private boolean inFight = false;
 
     private static final int MAX_DELAY_SEC = 60;
@@ -55,6 +59,12 @@ public class Summoner implements Account {
             System.out.println("Send command to press summon buff! time = " + lastBuff);
         }
 
+        if (!COLOR_HEALS_POINT_PET.equals(robot.getPixelColor(POS_PET_X, POS_PET_Y))) {
+            System.out.println("Heal pet!");
+            Utils.sendCommand(serialPort, Key.KEY_F7); // heal pet
+            Utils.sendCommand(serialPort, Key.KEY_F8); // resolve pet
+        }
+
         if (inFight) {
             Utils.sendCommand(serialPort, Key.KEY_F3);
             if (!checkMonsterHealPoints()) {
@@ -80,11 +90,9 @@ public class Summoner implements Account {
         System.out.println("Next target");
 //        Utils.sendCommand(serialPort, Key.KEY_ESC);
         Utils.sendCommand(serialPort, Key.KEY_F1); // next target
-        Utils.delay(100);
 
         if (!checkMonsterHealPoints()) {
             Utils.sendCommand(serialPort, Key.KEY_F2); // target solina
-            Utils.delay(100);
         }
 
         if (checkMonsterHealPoints()) {
@@ -101,7 +109,6 @@ public class Summoner implements Account {
     private void pickUpLoot() {
         for (int i = 0; i < 5; i++) {
             Utils.sendCommand(serialPort, Key.KEY_F4); // pickUp
-            Utils.delay(100);
         }
     }
 

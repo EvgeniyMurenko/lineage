@@ -54,7 +54,7 @@ public class MainController {
         System.out.println("initialize");
         accounts = new ArrayList<>();
         robot = new Robot();
-        serialPort = SerialPort.getCommPort("COM4");
+        serialPort = SerialPort.getCommPort("COM9");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
 
@@ -103,7 +103,6 @@ public class MainController {
         stopBtn.setDisable(true);
         System.out.println("Stop!!" + accounts.size());
 
-//        sendCommand(48); // 2
         serialPort.closePort();
         worker.stop();
     }
