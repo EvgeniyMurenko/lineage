@@ -42,7 +42,7 @@ public class Summoner implements Account {
         activeWindow = checkAndSetActiveWindow(activeWindow);
 
         if (professiLastBuff == null || LocalTime.now().isAfter(professiLastBuff.plusMinutes(professiBuffTime.getMinute()).plusSeconds(professiBuffTime.getSecond()))) {
-            Utils.sendCommand(serialPort, Key.KEY_F4); // need send some code of button
+            Utils.sendCommand(serialPort, Key.KEY_F6); // need send some code of button
             professiLastBuff = LocalTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
             Utils.delay(2000);
             System.out.println("Send command to press summon professi Buff! time = " + professiLastBuff);
@@ -56,12 +56,11 @@ public class Summoner implements Account {
         }
 
         if (inFight) {
-            if (!COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
+            Utils.sendCommand(serialPort, Key.KEY_F3);
+            if (!checkMonsterHealPoints()) {
                 Utils.delay(500);
                 inFight = false;
                 pickUpLoot();
-            } else {
-                Utils.sendCommand(serialPort, Key.KEY_F2);
             }
         } else {
             sendNextTarget();
@@ -79,20 +78,29 @@ public class Summoner implements Account {
 
     private void sendNextTarget() {
         System.out.println("Next target");
-        Utils.sendCommand(serialPort, Key.KEY_ESC);
-        Utils.sendCommand(serialPort, Key.KEY_F1);
-        Utils.delay(500);
-        if (COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y))) {
+//        Utils.sendCommand(serialPort, Key.KEY_ESC);
+        Utils.sendCommand(serialPort, Key.KEY_F1); // next target
+        Utils.delay(100);
+
+        if (!checkMonsterHealPoints()) {
+            Utils.sendCommand(serialPort, Key.KEY_F2); // target solina
+            Utils.delay(100);
+        }
+
+        if (checkMonsterHealPoints()) {
             System.out.println("Attack!");
-            Utils.sendCommand(serialPort, Key.KEY_F1);
-            Utils.sendCommand(serialPort, Key.KEY_F2);
+            Utils.sendCommand(serialPort, Key.KEY_F3); // attack sum + per
             inFight = true;
         }
     }
 
+    private boolean checkMonsterHealPoints() {
+        return COLOR_HEALS_POINT.equals(robot.getPixelColor(POS_X, POS_Y));
+    }
+
     private void pickUpLoot() {
         for (int i = 0; i < 5; i++) {
-            Utils.sendCommand(serialPort, Key.KEY_F3); // pickUp
+            Utils.sendCommand(serialPort, Key.KEY_F4); // pickUp
             Utils.delay(100);
         }
     }
