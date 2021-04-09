@@ -34,6 +34,13 @@
             <version>2.6.2</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>16</version>
+        </dependency>
+
     </dependencies>
 
     <plugins>

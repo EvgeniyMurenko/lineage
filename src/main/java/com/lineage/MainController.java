@@ -22,22 +22,11 @@ public class MainController {
     private Button stopBtn;
 
     @FXML
-    private TextField win1;
+    private TextField win;
 
     @FXML
-    private TextField win2;
+    private ComboBox<Role> getRole;
 
-    @FXML
-    private TextField win3;
-
-    @FXML
-    private ComboBox<Role> getRole1;
-
-    @FXML
-    private ComboBox<Role> getRole2;
-
-    @FXML
-    private ComboBox<Role> getRole3;
 
     @FXML
     private ListView<Profile> profilesListView;
@@ -58,12 +47,8 @@ public class MainController {
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
 
-        getRole1.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
-        getRole1.getSelectionModel().selectFirst();
-        getRole2.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
-        getRole2.getSelectionModel().selectFirst();
-        getRole3.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
-        getRole3.getSelectionModel().selectFirst();
+        getRole.setItems(FXCollections.observableArrayList(Arrays.asList(Role.values())));
+        getRole.getSelectionModel().selectLast();
 
         List<Profile> profilesList = createProfiles();
         profilesListView.setItems(FXCollections.observableArrayList(profilesList));
@@ -71,7 +56,7 @@ public class MainController {
     }
 
     private List<Profile> createProfiles() {
-        Profile pcProfile = new Profile("pc", 790, 51, Color.rgb(111, 23, 20));
+        Profile pcProfile = new Profile("pc", 792, 51, Color.rgb(111, 23, 19));
         Profile laptopProfile = new Profile("laptop", 716, 46, Color.rgb(135, 29, 24));
         return List.of(pcProfile, laptopProfile);
     }
@@ -79,14 +64,12 @@ public class MainController {
     @FXML
     private void startTask() {
         System.out.println("Start!");
-        setDisable(true, win1, win2, win3, getRole1, getRole2, getRole3, startBtn);
+        setDisable(true, win, getRole, startBtn);
         stopBtn.setDisable(false);
 
         Profile profile = profilesListView.getSelectionModel().getSelectedItem();
 
-        if (Objects.nonNull(getRole1.getValue())) createAccount(getRole1.getValue(), win1.getText(), profile);
-        if (Objects.nonNull(getRole2.getValue())) createAccount(getRole2.getValue(), win2.getText(), profile);
-        if (Objects.nonNull(getRole3.getValue())) createAccount(getRole3.getValue(), win3.getText(), profile);
+        if (Objects.nonNull(getRole.getValue())) createAccount(getRole.getValue(), win.getText(), profile);
 
         accounts.forEach(it -> System.out.println("win = " + it.getWinKeyCode() + " role = " + it.getClass().getSimpleName()));
 
@@ -99,7 +82,7 @@ public class MainController {
 
     @FXML
     private void stopTask() {
-        setDisable(false, win1, win2, win3, getRole1, getRole2, getRole3, startBtn);
+        setDisable(false, win, getRole, startBtn);
         stopBtn.setDisable(true);
         System.out.println("Stop!!" + accounts.size());
 
@@ -111,9 +94,8 @@ public class MainController {
         Account account;
         switch (role) {
             case SUMM: account = new Summoner(winNum, robot, serialPort, profile); accounts.add(account);  break;
-            case BD: account = new Bladedancer(winNum, robot, serialPort, profile); accounts.add(account);  break;
-            case PP: account = new Prophet(winNum, robot, serialPort, profile); accounts.add(account);  break;
-            case SHK: account = new ShillienKnight(winNum, robot, serialPort, profile); accounts.add(account);  break;
+            case SPOIL: account = new Spoiler(winNum, robot, serialPort, profile); accounts.add(account);  break;
+            case FISHING: account = new Fishing(winNum, robot, serialPort, profile); accounts.add(account);  break;
             default: System.out.println("Role not supported! Role = " + role);
         }
     }
