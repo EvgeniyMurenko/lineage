@@ -1,4 +1,4 @@
-package com.lineage;
+package com.lineage.util;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.lineage.domain.Key;

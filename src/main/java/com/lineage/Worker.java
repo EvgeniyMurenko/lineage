@@ -1,6 +1,7 @@
 package com.lineage;
 
-import com.lineage.domain.Account;
+import com.lineage.script.Account;
+import com.lineage.util.Utils;
 
 import java.util.List;
 

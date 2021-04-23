@@ -1,6 +1,6 @@
-package com.lineage.domain;
+package com.lineage.analitic;
 
-import com.lineage.Utils;
+import com.lineage.util.Utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,7 +11,7 @@ public class PictureAnalytic {
     public boolean checkPicture() {
         BufferedImage mainPic = createScreen();
 
-        Utils.delay(700);
+        Utils.delay(1000);
         BufferedImage changePic = createScreen();
 
         if (mainPic == null || changePic == null) return false;
@@ -36,7 +36,8 @@ public class PictureAnalytic {
 
         BufferedImage image = null;
         try {
-            image = new Robot().createScreenCapture(new Rectangle(310, 370, 250, 20));
+//            image = new Robot().createScreenCapture(new Rectangle(310, 370, 250, 20));
+            image = new Robot().createScreenCapture(new Rectangle(15, 415, 240, 20));
             BufferedImage result = new BufferedImage(
                     image.getWidth(),
                     image.getHeight(),

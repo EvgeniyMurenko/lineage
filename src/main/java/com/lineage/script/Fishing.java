@@ -1,11 +1,17 @@
-package com.lineage.domain;
+package com.lineage.script;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.lineage.Utils;
+import com.lineage.analitic.PictureAnalytic;
+import com.lineage.domain.FishStatus;
+import com.lineage.domain.Key;
+import com.lineage.domain.Profile;
+import com.lineage.util.Utils;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -19,22 +25,44 @@ public class Fishing implements Account {
     private final int POS_Y;
 
     private final List<Color> FISHING_PANE_COLOR = List.of(Color.rgb(36, 30, 21),
-            Color.rgb(38, 31, 24));
-    private final int FISHING_PANE_POS_X = 370;
-    private final int FISHING_PANE_POS_Y = 143;
-
-    private final int COR_X = 329;
-    private final int COR_Y = 378;
+            Color.rgb(38, 31, 24),
+            Color.rgb(41, 36, 28),
+            Color.rgb(35, 29, 20),
+            Color.rgb(42, 36, 25),
+            Color.rgb(36, 29, 20),
+            Color.rgb(37, 30, 21),
+            Color.rgb(34, 28, 20),
+            Color.rgb(35, 29, 21),
+            Color.rgb(34, 29, 20)
+    );
+//    private final int FISHING_PANE_POS_X = 370;
+    private final int FISHING_PANE_POS_X = 15;
+    private final int FISHING_PANE_POS_Y = 184;
 
     private boolean inFight = false;
     private final PictureAnalytic pictureAnalytic;
     private FishStatus fishStatus = FishStatus.STOP;
 
+    private static final int MAX_DELAY_SEC = 60;
+    private final LocalTime buffTime = LocalTime.of(0, 55, 30);
+    private LocalDateTime lastBuff;
+
+
+    //    private final int COR_X = 329;
+//    private final int COR_Y = 378;
+    private final int COR_X = 25;
+    private final int COR_Y = 424;
     private final List<Color> PROCESS_BAR_COLOR_TONE = List.of(
             Color.rgb(0, 103, 159),
             Color.rgb(0, 104, 159),
             Color.rgb(0, 105, 159),
-            Color.rgb(32, 107, 151)
+            Color.rgb(32, 107, 151),
+            Color.rgb(0, 162, 201),
+            Color.rgb(1, 129, 186),
+            Color.rgb(0, 130, 187),
+            Color.rgb(1, 103, 159),
+            Color.rgb(0, 131, 189),
+            Color.rgb(0, 131, 188)
     );
 
     public Fishing(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
@@ -51,6 +79,12 @@ public class Fishing implements Account {
     public Account process(Account activeWindow) {
 
         activeWindow = checkAndSetActiveWindow(activeWindow);
+
+        if (!inFight && FishStatus.STOP.equals(fishStatus) && (lastBuff == null || LocalDateTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond())))) {
+            Utils.sendCommand(serialPort, Key.KEY_F8); // need send some code of button
+            lastBuff = LocalDateTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
+            System.out.println("Send command to press summon buff! time = " + lastBuff);
+        }
 
         if (!inFight && FishStatus.STOP.equals(fishStatus)) {
             // start fishing
@@ -74,7 +108,7 @@ public class Fishing implements Account {
             }
 
             if (!fishingIconChange()) {
-                Utils.delay(2000);
+                Utils.delay(1500);
             }
         }
 
@@ -90,6 +124,7 @@ public class Fishing implements Account {
                 inFight = false;
                 pickUpLoot();
                 Utils.sendCommand(serialPort, Key.KEY_ESC);
+                Utils.sendCommand(serialPort, Key.KEY_F9);
             }
         }
 
@@ -118,6 +153,7 @@ public class Fishing implements Account {
 
         if (checkMonsterHealPoints()) {
             System.out.println("Attack!");
+            Utils.sendCommand(serialPort, Key.KEY_F5); // take dagger
             Utils.sendCommand(serialPort, Key.KEY_F7); // attack sum + per
             inFight = true;
         }

@@ -1,4 +1,4 @@
-package com.lineage.domain;
+package com.lineage.script;
 
 import javafx.scene.input.KeyCode;
 

@@ -1,7 +1,9 @@
-package com.lineage.domain;
+package com.lineage.script;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.lineage.Utils;
+import com.lineage.domain.Key;
+import com.lineage.domain.Profile;
+import com.lineage.util.Utils;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
@@ -9,7 +11,7 @@ import javafx.scene.robot.Robot;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Summoner implements Account {
+public class Spoiler implements Account {
 
     private final KeyCode winKeyCode;
     private final Robot robot;
@@ -18,10 +20,6 @@ public class Summoner implements Account {
     private final int POS_X;
     private final int POS_Y;
 
-    private final Color COLOR_HEALS_POINT_PET = Color.rgb(111, 23, 19);
-    private final int POS_PET_X = 510;
-    private final int POS_PET_Y = 867;
-
     private boolean inFight = false;
 
     private static final int MAX_DELAY_SEC = 60;
@@ -29,10 +27,7 @@ public class Summoner implements Account {
     private final LocalTime buffTime = LocalTime.of(0, 18, 30);
     private LocalDateTime lastBuff;
 
-    private final LocalTime professiBuffTime = LocalTime.of(0, 4, 0);
-    private LocalDateTime professiLastBuff;
-
-    public Summoner(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
+    public Spoiler(String windowNum, Robot robot, SerialPort serialPort, Profile profile) {
         this.winKeyCode = KeyCode.getKeyCode(windowNum);
         this.robot = robot;
         this.serialPort = serialPort;
@@ -46,30 +41,11 @@ public class Summoner implements Account {
 
         activeWindow = checkAndSetActiveWindow(activeWindow);
 
-        if (professiLastBuff == null || LocalDateTime.now().isAfter(professiLastBuff.plusMinutes(professiBuffTime.getMinute()).plusSeconds(professiBuffTime.getSecond()))) {
-            Utils.sendCommand(serialPort, Key.KEY_F6); // need send some code of button
-            professiLastBuff = LocalDateTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
-            Utils.delay(2000);
-            System.out.println("Send command to press summon professi Buff! time = " + professiLastBuff);
-        }
-
         if (lastBuff == null || LocalDateTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond()))) {
             Utils.sendCommand(serialPort, Key.KEY_F5); // need send some code of button
             Utils.delay(7500);
-            Utils.sendCommand(serialPort, Key.KEY_F9); // банка хасты
-            Utils.delay(500);
-            Utils.sendCommand(serialPort, Key.KEY_F9); // банка хасты
-            Utils.delay(500);
-            Utils.sendCommand(serialPort, Key.KEY_F9); // банка хасты
-            Utils.delay(500);
             lastBuff = LocalDateTime.now().plusSeconds(Utils.getRandomSeconds(MAX_DELAY_SEC));
             System.out.println("Send command to press summon buff! time = " + lastBuff);
-        }
-
-        if (!COLOR_HEALS_POINT_PET.equals(robot.getPixelColor(POS_PET_X, POS_PET_Y))) {
-            System.out.println("Heal pet!");
-            Utils.sendCommand(serialPort, Key.KEY_F7); // heal pet
-            Utils.sendCommand(serialPort, Key.KEY_F8); // resolve pet
         }
 
         if (inFight) {
@@ -77,7 +53,7 @@ public class Summoner implements Account {
             if (!checkMonsterHealPoints()) {
                 Utils.delay(500);
                 inFight = false;
-//                pickUpLoot();
+                pickUpLoot();
                 Utils.sendCommand(serialPort, Key.KEY_ESC);
             }
         } else {

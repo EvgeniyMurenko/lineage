@@ -1,7 +1,14 @@
-package com.lineage;
+package com.lineage.controller;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.lineage.domain.*;
+import com.lineage.Worker;
+import com.lineage.domain.Profile;
+import com.lineage.domain.Role;
+import com.lineage.script.Account;
+import com.lineage.script.Fishing;
+import com.lineage.script.Spoiler;
+import com.lineage.script.Summoner;
+import com.lineage.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -56,9 +63,10 @@ public class MainController {
     }
 
     private List<Profile> createProfiles() {
-        Profile pcProfile = new Profile("pc", 792, 51, Color.rgb(111, 23, 19));
+        Profile pcProfile = new Profile("pc", 899, 51, Color.rgb(111, 23, 19));
         Profile laptopProfile = new Profile("laptop", 716, 46, Color.rgb(135, 29, 24));
-        return List.of(pcProfile, laptopProfile);
+        Profile half = new Profile("half", 24, 146, Color.rgb(135, 28, 24));
+        return List.of(pcProfile, laptopProfile, half);
     }
 
     @FXML
