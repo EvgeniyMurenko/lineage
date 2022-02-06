@@ -1,10 +1,11 @@
-package com.lineage.script;
+package com.lineage.script.old;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.lineage.analitic.PictureAnalytic;
 import com.lineage.domain.FishStatus;
 import com.lineage.domain.Key;
 import com.lineage.domain.Profile;
+import com.lineage.script.Script;
 import com.lineage.util.Utils;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-
-public class Fishing implements Account {
+@Deprecated
+public class Fishing implements Script {
 
     private final KeyCode winKeyCode;
     private final Robot robot;
@@ -70,15 +71,15 @@ public class Fishing implements Account {
         this.robot = robot;
         this.serialPort = serialPort;
         this.COLOR_HEALS_POINT = profile.getColor();
-        this.POS_X = profile.getxCord();
-        this.POS_Y = profile.getyCord();
+        this.POS_X = profile.getXCord();
+        this.POS_Y = profile.getYCord();
         pictureAnalytic = new PictureAnalytic();
     }
 
     @Override
-    public Account process(Account activeWindow) {
+    public void process() {
 
-        activeWindow = checkAndSetActiveWindow(activeWindow);
+//        activeWindow = checkAndSetActiveWindow(activeWindow);
 
         if (!inFight && FishStatus.STOP.equals(fishStatus) && (lastBuff == null || LocalDateTime.now().isAfter(lastBuff.plusMinutes(buffTime.getMinute()).plusSeconds(buffTime.getSecond())))) {
             Utils.sendCommand(serialPort, Key.KEY_F8); // need send some code of button
@@ -128,7 +129,21 @@ public class Fishing implements Account {
             }
         }
 
-        return activeWindow;
+    }
+
+    @Override
+    public void startScript() {
+
+    }
+
+    @Override
+    public void stopScript() {
+
+    }
+
+    @Override
+    public void startBuff() {
+
     }
 
     private boolean fishingIconChange() {
@@ -139,7 +154,7 @@ public class Fishing implements Account {
         return false;
     }
 
-    private Account checkAndSetActiveWindow(Account activeWindow) {
+    private Script checkAndSetActiveWindow(Script activeWindow) {
         if (activeWindow == null || !activeWindow.equals(this)) {
             Utils.switchWindow(robot, winKeyCode);
             activeWindow = this;

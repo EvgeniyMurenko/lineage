@@ -7,6 +7,14 @@ import javafx.scene.robot.Robot;
 
 public class Utils {
 
+    public static void delay() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void delay(int delay) {
         try {
             Thread.sleep(delay);
